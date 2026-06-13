@@ -16,5 +16,8 @@
       "connectString": "postgres://postgres:toor@localhost:5432/dev?schema=public",
       "name": "myproject"
     }
-  ]
+  ],
+  "editor.codeActionsOnSave": {
+    "source.organizeImports.biome": "always"
+  }
 }
