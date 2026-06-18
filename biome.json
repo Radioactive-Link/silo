@@ -15,7 +15,8 @@
       "!build",
       "!types/cache-life.d.ts",
       "!types/routes.d.ts",
-      "!types/validator.ts"
+      "!types/validator.ts",
+      "!prisma/generated"
     ]
   },
   "formatter": {

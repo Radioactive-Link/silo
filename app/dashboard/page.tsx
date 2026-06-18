@@ -1,24 +1,17 @@
-"use client";
-
-import { redirect } from "next/navigation";
-import { useSession } from "@/lib/auth-client";
 import { HorizontalDivider } from "../components/HorizontalDivider";
+import CreateOrganization from "./components/CreateOrganization";
+import LandingPage from "./components/LandingPage";
+import Organizations from "./components/Organizations";
 
-export default function LandingPage() {
-  const { data: session, isPending } = useSession();
-  if (isPending) {
-    return <div>Loading...</div>;
-  }
-  if (!session) {
-    redirect("/");
-  }
+export default function DashboardPage() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center pt-6">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center sm:items-start gap-3">
-        <h1>Dashboard</h1>
+    <LandingPage>
+      <div className="w-full flex flex-col gap-2">
+        <h2>Organizations</h2>
         <HorizontalDivider />
-        <p>Hello, {session.user.name}!</p>
-      </main>
-    </div>
+        <Organizations />
+      </div>
+      <CreateOrganization />
+    </LandingPage>
   );
 }
