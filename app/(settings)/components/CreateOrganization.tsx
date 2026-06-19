@@ -69,7 +69,7 @@ export default function CreateOrganization() {
           ></input>
           <button
             type="submit"
-            className="w-fit px-2 bg-emerald-300! border-2 disabled:opacity-50 disabled:transition-none! disabled:transform-none! disabled:hover:shadow-[3px_3px_0_#222222]! cursor-not-allowed"
+            className="w-fit px-2 bg-emerald-300! border-2 disabled:opacity-50 disabled:transition-none! disabled:transform-none! disabled:hover:shadow-[3px_3px_0_#222222]! disabled:cursor-not-allowed"
             disabled={fetching || !orgName}
           >
             Submit

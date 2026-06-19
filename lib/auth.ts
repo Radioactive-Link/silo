@@ -20,6 +20,27 @@ export const auth = betterAuth({
     // see: https://better-auth.com/docs/adapters/prisma#joins-experimental
     joins: true,
   },
+  user: {
+    deleteUser: {
+      enabled: true,
+      beforeDelete: async (user, _request) => {
+        // this will cascade to delete everything under the organization.
+        /**
+         * TODO: likely want to handle errors and provide info to the user.
+         * Might have to make this a dedicated endpoint.
+         */
+        await prisma.organization.deleteMany({
+          where: {
+            organizationMembers: {
+              some: {
+                userId: user.id,
+              },
+            },
+          },
+        });
+      },
+    },
+  },
 });
 
 /**

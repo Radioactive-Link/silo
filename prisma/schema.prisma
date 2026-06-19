@@ -43,8 +43,8 @@ model OrganizationMember {
 
   role OrganizationRole @default(MEMBER)
 
-  user         User         @relation(fields: [userId], references: [id])
-  organization Organization @relation(fields: [organizationId], references: [id])
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  organization Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
 
   @@unique([userId, organizationId])
 }
@@ -55,7 +55,7 @@ model Team {
   createdAt DateTime @default(now())
 
   organizationId String
-  organization   Organization @relation(fields: [organizationId], references: [id])
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
 
   teamMembers TeamMember[]
 }
@@ -68,8 +68,8 @@ model TeamMember {
   userId String
   teamId String
 
-  user User @relation(fields: [userId], references: [id])
-  team Team @relation(fields: [teamId], references: [id])
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  team Team @relation(fields: [teamId], references: [id], onDelete: Cascade)
 
   @@unique([userId, teamId])
 }
@@ -93,9 +93,9 @@ model Invitation {
   invitedByUserId String
   organizationId  String
 
-  user          User         @relation("InvitationToUser", fields: [userId], references: [id])
-  invitedByUser User         @relation("OutgoingInvitation", fields: [invitedByUserId], references: [id])
-  organization  Organization @relation(fields: [organizationId], references: [id])
+  user          User         @relation("InvitationToUser", fields: [userId], references: [id], onDelete: Cascade)
+  invitedByUser User         @relation("OutgoingInvitation", fields: [invitedByUserId], references: [id], onDelete: Cascade)
+  organization  Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
 
   @@unique([userId, organizationId])
 }
@@ -121,7 +121,7 @@ model Project {
   description String?
 
   organizationId String
-  organization   Organization @relation(fields: [organizationId], references: [id])
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
 
   userProjectRoles UserProjectRole[]
   teamProjectRoles TeamProjectRole[]
@@ -138,7 +138,7 @@ model Page {
   content Json
 
   projectId String
-  project   Project @relation(fields: [projectId], references: [id])
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
 
   groupId Int?
   group   Group? @relation(fields: [groupId], references: [id])
@@ -149,7 +149,7 @@ model Group {
   name String
 
   projectId String
-  project   Project @relation(fields: [projectId], references: [id])
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
 
   pages Page[]
 }
@@ -166,7 +166,7 @@ model UserProjectRole {
   role ProjectRole
 
   projectId String
-  project   Project @relation(fields: [projectId], references: [id])
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
 }
 
 model TeamProjectRole {
@@ -177,7 +177,7 @@ model TeamProjectRole {
   role ProjectRole
 
   projectId String
-  project   Project @relation(fields: [projectId], references: [id])
+  project   Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
 }
 
 enum ProjectRole {

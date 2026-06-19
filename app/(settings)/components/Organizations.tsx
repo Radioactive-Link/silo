@@ -4,13 +4,15 @@ import { prisma } from "@/lib/prisma";
 export default async function Organizations() {
   const { user } = await requireAuth();
   const organizations = await prisma.organization.findMany({
-    include: {
+    where: {
       organizationMembers: {
-        where: {
+        some: {
           userId: user.id,
         },
-        include: {},
       },
+    },
+    include: {
+      organizationMembers: true,
     },
   });
 
@@ -29,7 +31,7 @@ export default async function Organizations() {
               <tr key={org.id}>
                 <td className="truncate max-w-px">{org.name}</td>
                 <td className="truncate max-w-px">
-                  {org.organizationMembers[0].role}
+                  {org.organizationMembers[0]?.role}
                 </td>
               </tr>
             ))}
