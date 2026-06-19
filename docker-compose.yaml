@@ -10,6 +10,18 @@ services:
       - "5432:5432"
     volumes:
       - pg_volume:/var/lib/postgresql/data:rw
+  app:
+    build: .
+    container_name: doc-project
+    depends_on:
+      - db
+    env_file:
+      - .env
+    environment:
+      # override since host is now the db service; not localhost
+      DATABASE_URL: postgres://postgres:toor@db:5432/dev
+    ports:
+      - "3000:3000"
 
 volumes:
   pg_volume:
