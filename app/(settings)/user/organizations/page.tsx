@@ -9,7 +9,7 @@ export default function OrganizationListPage() {
       <div className="flex justify-between mb-1">
         <h2>Organizations</h2>
         <Button>
-          <Link href="/organizations/create">Create New +</Link>
+          <Link href="/user/organizations/create">Create New +</Link>
         </Button>
       </div>
       <HorizontalDivider />
