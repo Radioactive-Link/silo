@@ -55,3 +55,18 @@ EXPOSE 3000
 
 # Start Next.js standalone server with Bun
 CMD ["bun", "server.js"]
+
+
+FROM oven/bun:1.3.14-alpine AS migration
+
+WORKDIR /app
+
+ENV NODE_ENV=production
+
+COPY --from=dependencies --chown=bun:bun /app/node_modules ./node_modules
+COPY prisma ./prisma
+COPY package.json prisma.config.ts bun.lock* ./
+
+USER bun
+
+CMD ["bunx", "prisma", "migrate", "deploy"]
