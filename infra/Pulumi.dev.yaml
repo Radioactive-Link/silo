@@ -1,0 +1,12 @@
+encryptionsalt: v1:/YlyJC4Dl8Y=:v1:csIthcYwVCO0KArf:L33VMJSz1MOguZ773iZVy1ZW3ZfV3w==
+config:
+  doc-project:dbPassword:
+    secure: v1:85t7vxN8Vc1LuQwf:Qv1tPoEhD1wrzoVc6Ufa4V8Y5TQ=
+  doc-project:dbUrl:
+    secure: v1:ZV7/AoeR8L+KoijQ:Cs6Tkvj0wtj4Y7YA+xgFKdx+bgt9Y0TGCwzIKiQMitDlO/JNPmZ18J+GuvgsJMm8ZCvNZ/kSkICuXqvheQTTzqLAJn1a1qCb
+  doc-project:betterAuthSecret:
+    secure: v1:1qlRQEtdctP2mJEb:zlqIQT/Y/K8xngBruU1/me3hqMoaSJfX58wtv2KKqgkGQr8O/DsLrKvz/t772vIxPzMetL4Y2xn0hEQd
+  doc-project:githubClientId:
+    secure: v1:hUtplD7BdZ8d+vNN:QYoAITe6Xg6fxKQUVfy5iaj2rCkEruoA3HWHtwP0C9KzTkGi
+  doc-project:githubClientSecret:
+    secure: v1:G+EdygnNmx5MDBGH:x4f0wwWaogjVC95xvPfLoz93xMIZI5lKN5Beo1pGPqO4F6X9KhfgXNC3TjWxcwKotdqxihKPp7s=

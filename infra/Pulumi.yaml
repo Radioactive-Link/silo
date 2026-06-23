@@ -1,0 +1,10 @@
+name: doc-project
+description: todo
+runtime:
+  name: nodejs
+  options:
+    packagemanager: bun
+config:
+  pulumi:tags:
+    value:
+      pulumi:template: kubernetes-typescript
