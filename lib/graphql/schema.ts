@@ -104,14 +104,14 @@ builder.queryFields((t) => ({
   // get all organizations the user belongs to
   organizations: t.prismaField({
     type: ["Organization"],
-    resolve: (query, _parent, args, ctx) => {
+    resolve: (query, _parent, _args, ctx) => {
       if (!ctx.user) throw new GraphQLError("Unauthorized");
 
       return db.organization.findMany({
         ...query,
-        include: {
+        where: {
           organizationMembers: {
-            where: {
+            some: {
               userId: ctx.user.id,
             },
           },
@@ -148,6 +148,54 @@ builder.mutationFields((t) => ({
         });
 
         return org;
+      } catch (e) {
+        if (
+          e instanceof Prisma.PrismaClientKnownRequestError &&
+          e.code === "P2002"
+        ) {
+          throw new GraphQLError("This name is taken!");
+        }
+      }
+    },
+  }),
+  updateOrganization: t.prismaField({
+    type: "Organization",
+    args: {
+      id: t.arg.id({ required: true }),
+      name: t.arg.string({ required: true }),
+    },
+    nullable: true,
+    resolve: async (query, _parent, args, ctx) => {
+      if (!ctx.user) throw new GraphQLError("Unauthorized");
+
+      // get user from organization if they are an owner
+      const organizations = await db.organization.findFirst({
+        where: {
+          id: args.id,
+          organizationMembers: {
+            some: {
+              userId: ctx.user.id,
+              role: "OWNER",
+            },
+          },
+        },
+      });
+
+      // only owners of this organization can change the name
+      if (!organizations) throw new GraphQLError("Unauthorized");
+
+      try {
+        const result = await db.organization.update({
+          ...query,
+          where: {
+            id: args.id,
+          },
+          data: {
+            name: args.name,
+          },
+        });
+
+        return result;
       } catch (e) {
         if (
           e instanceof Prisma.PrismaClientKnownRequestError &&

@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { signIn, signOut, useSession } from "@/lib/auth-client";
 import { Button } from "./Button";
+import OrganizationCtxDropdown from "./OrganizationCtxDropdown";
 
 export const Navbar = () => {
   const router = useRouter();
@@ -32,7 +33,10 @@ export const Navbar = () => {
   return (
     <div className="w-full">
       <nav className="w-full p-3 flex flex-row justify-between bg-orange-200">
-        <Button onClick={() => router.push("/")}>Home</Button>
+        <div className="flex gap-2 bg-inherit!">
+          <Button onClick={() => router.push("/")}>Home</Button>
+          <OrganizationCtxDropdown />
+        </div>
         {rightModule}
       </nav>
     </div>
