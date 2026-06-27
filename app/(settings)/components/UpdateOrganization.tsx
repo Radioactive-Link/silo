@@ -21,7 +21,7 @@ export default function UpdateOrganizationForm({
 }) {
   const [name, setName] = useState(organization.name);
   const [gqlError, setError] = useState<string | null>(null);
-  const [{ fetching, error }, updateOrganization] = useMutation(
+  const [{ fetching, error, data }, updateOrganization] = useMutation(
     UpdateOrganizationMutation,
   );
 
@@ -47,6 +47,12 @@ export default function UpdateOrganizationForm({
         hidden={!error}
       >
         {gqlError}
+      </div>
+      <div
+        className="bg-emerald-300! shadow-[3px_3px_0_#222222] border-2 border-dashed mb-3 p-2"
+        hidden={!data?.updateOrganization}
+      >
+        Success!
       </div>
       <label htmlFor="update-organization-name">Update Organization Name</label>
       <div className="flex gap-3">

@@ -121,6 +121,20 @@ builder.queryFields((t) => ({
   }),
 }));
 
+interface DeleteOrganizationResult {
+  success: boolean;
+  message: string;
+}
+const DeleteOrganizationResultRef = builder.objectRef<DeleteOrganizationResult>(
+  "DeleteOrganizationResult",
+);
+DeleteOrganizationResultRef.implement({
+  fields: (t) => ({
+    success: t.exposeBoolean("success"),
+    message: t.exposeString("message"),
+  }),
+});
+
 builder.mutationType({});
 builder.mutationFields((t) => ({
   createOrganization: t.prismaField({
@@ -204,6 +218,34 @@ builder.mutationFields((t) => ({
           throw new GraphQLError("This name is taken!");
         }
       }
+    },
+  }),
+  deleteOrganization: t.field({
+    args: {
+      id: t.arg.id({ required: true }),
+    },
+    type: DeleteOrganizationResultRef,
+    resolve: async (_parent, args, ctx) => {
+      if (!ctx.user) throw new GraphQLError("Unauthorized!");
+
+      const result = await db.organization.deleteMany({
+        where: {
+          id: args.id,
+          // include role check
+          organizationMembers: {
+            some: {
+              userId: ctx.user.id,
+              role: "OWNER",
+            },
+          },
+        },
+      });
+
+      if (result.count === 0) {
+        return { success: false, message: "Failed to delete organization." };
+      }
+
+      return { success: true, message: "Successfully deleted organization." };
     },
   }),
 }));
