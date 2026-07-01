@@ -33,6 +33,7 @@ builder.prismaObject("Team", {
     createdAt: t.expose("createdAt", { type: "DateTime" }),
     organization: t.relation("organization"),
     teamMembers: t.relation("teamMembers"),
+    memberCount: t.relationCount("teamMembers"),
   }),
 });
 
@@ -246,6 +247,94 @@ builder.mutationFields((t) => ({
       }
 
       return { success: true, message: "Successfully deleted organization." };
+    },
+  }),
+}));
+
+builder.queryFields((t) => ({
+  teams: t.prismaField({
+    type: ["Team"],
+    args: {
+      organizationId: t.arg.id({ required: true }),
+    },
+    resolve: async (query, _parent, args, ctx) => {
+      if (!ctx.user) throw new GraphQLError("Unauthorized");
+
+      const organization = await db.organization.findFirst({
+        where: {
+          id: args.organizationId,
+          organizationMembers: {
+            some: {
+              userId: ctx.user.id,
+              OR: [
+                {
+                  role: "MEMBER",
+                },
+                {
+                  role: "ADMIN",
+                },
+                {
+                  role: "OWNER",
+                },
+              ],
+            },
+          },
+        },
+      });
+
+      if (!organization) throw new GraphQLError("Unauthorized");
+
+      const teams = await db.team.findMany({
+        ...query,
+        where: {
+          organizationId: args.organizationId,
+        },
+      });
+
+      return teams;
+    },
+  }),
+}));
+builder.mutationFields((t) => ({
+  createTeam: t.prismaField({
+    type: "Team",
+    args: {
+      organizationId: t.arg.id({ required: true }),
+      teamName: t.arg.string({ required: true }),
+    },
+    resolve: async (query, _parent, args, ctx) => {
+      if (!ctx.user) throw new GraphQLError("Unauthorized");
+
+      const organization = await db.organization.findFirst({
+        where: {
+          id: args.organizationId,
+          organizationMembers: {
+            some: {
+              userId: ctx.user.id,
+              OR: [
+                {
+                  role: "OWNER",
+                },
+                {
+                  role: "ADMIN",
+                },
+              ],
+            },
+          },
+        },
+      });
+
+      if (!organization) throw new GraphQLError("Unauthorized");
+
+      const result = await db.team.create({
+        ...query,
+        data: {
+          organizationId: args.organizationId,
+          name: args.teamName,
+        },
+      });
+
+      return result;
     },
   }),
 }));
