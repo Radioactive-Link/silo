@@ -34,6 +34,7 @@ export const auth = betterAuth({
             organizationMembers: {
               some: {
                 userId: user.id,
+                role: "OWNER",
               },
             },
           },
